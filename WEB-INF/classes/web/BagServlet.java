@@ -8,16 +8,19 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-// TODO: this class should extends something to be a usable servlet.
-// TODO: add an annotation here to map your servlet on an URL.
 @WebServlet("/bag")
-public class BagServlet {
-	
+public class BagServlet extends HttpServlet{
+
 	Bag myBag = new Bag();
-	
-	protected void doGet(HttpServletRequest req, HttpServletResponse res) 
-	throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest req, HttpServletResponse res)
+			throws ServletException, IOException {
+
 		PrintWriter out = res.getWriter();
+
+		HttpSession session = req.getSession();
+		Bag userBag = (Bag) session.getAttribute("userBag");
+
 
 		out.write("<html><body>");
 		out.write("<form method=\"post\">");
@@ -33,29 +36,27 @@ public class BagServlet {
 
 		if(ref == null || qty == null) throw new ServletException("Erreur 400 : quantite ou reference non rempli");
 		else {
-			RequestDispatcher rd = req.getRequestDispatcher("bag.jsp");
+			RequestDispatcher rd = req.getRequestDispatcher("bag");
 			rd.forward(req, res);
 		}
-
 	}
 
-
-	
-	
-	protected void doPost(HttpServletRequest req, HttpServletResponse res) 
-	throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse res)
+			throws ServletException, IOException {
 		PrintWriter out = res.getWriter();
+		HttpSession session = req.getSession();
 
 		String ref = req.getParameter("ref");
 		String qty = req.getParameter("qty");
 
 		if ( ref == null || qty == null ) throw new ServletException("error : 400");
 		else{
-			out.println("La reference est :"+ref +" et la quantité est de :"+qty);
+			Bag userBag = (Bag) session.getAttribute("userBag");
+			if(userBag == null){
+				userBag = new Bag();
+			}
+			userBag.setItem(ref,Integer.parseInt(qty));
+			out.print(userBag);
 		}
 	}
-	
-	
-	
-
 }
