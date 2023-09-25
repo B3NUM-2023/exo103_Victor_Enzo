@@ -7,13 +7,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class Bag {
-	
 	protected Map<String, Integer> entries = new HashMap<>();
 	
 	protected void added( String reference, int quantity ) {}
 	protected void updated( String reference, int quantity ) {}
 	protected void deleted( String reference ) {}
-	
 	public void setItem(String reference, int quantity) {
 		
 		// Check if entry was in bag
@@ -34,19 +32,15 @@ public class Bag {
 			}
 		}
 	}
-	
-
-
 	public void print(Writer out) {
 		try {
 			out.append("<ul>\n");
 			for ( Entry<String, Integer> entry : entries.entrySet() ) {
-				out.append( String.format("<li class=\"%s\">%03d</li>\n", entry.getKey(), entry.getValue()) );
+                out.append(String.format("%s : %d\n", entry.getKey(), entry.getValue()));
 			}
 			out.append("</ul>\n");
 		} catch (IOException e) {}
 	}
-	
 	public boolean mayAdd( String reference, int quantity  ) { 
 		return true; 
 	}
